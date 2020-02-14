@@ -9,24 +9,49 @@ class App extends React.Component {
     super(props);
     this.state = {
       searchResults: [
-        {id: null, name: "Allumer le feu", artist: "Johnny Hallyday", album: "Best on-tours Hallyday"},
-        {id: null, name: "Soleil", artist: "Aznavour", album: "Biggest dancefloor hits"},
-        {id: null, name: "Le tortue et la lièvre", artist: "PNL", album: "NTM"}
+        {id: 457, name: "Allumer le feu", artist: "Johnny Hallyday", album: "Best on-tours Hallyday", uri: "spotify:track:1rqhFgbbKwnb9MLmUQDhG6"},
+        {id: 123, name: "Soleil", artist: "Aznavour", album: "Biggest dancefloor hits", uri: "spotify:track:2rqhFgbbKwnb9MLmUQDhG6"},
+        {id: 893, name: "Le tortue et la lièvre", artist: "PNL", album: "NTM", uri: "spotify:track:3rqhFgbbKwnb9MLmUQDhG6"}
       ],
       playlistName: "My Playlist",
       playlistTracks: [
-        {id: null, name: "Mon grand poney", artist: "Eddie Malou", album: "Le rap congolais"},
-        {id: null, name: "Press F", artist: "Call of Duty", album: "Your mom is"},
-        {id: null, name: "Wrap god", artist: "Emi's nems", album: "Quick & healthy food"}
+        {id: 134, name: "Mon grand poney", artist: "Eddie Malou", album: "Le rap congolais", uri: "spotify:track:7rqhFgbbKwnb9MLmUQDhG6"},
+        {id: 12, name: "Press F", artist: "Call of Duty", album: "Your mom is", uri: "spotify:track:8rqhFgbbKwnb9MLmUQDhG6"},
+        {id: 997, name: "Wrap god", artist: "Emi's nems", album: "Quick & healthy food", uri: "spotify:track:9rqhFgbbKwnb9MLmUQDhG6"}
       ]
     };
     this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+    this.updatePlaylistName = this.updatePlaylistName.bind(this);
+    this.savePlaylist = this.savePlaylist.bind(this);
+    this.search = this.search.bind(this);
   }
 
   addTrack(track) {
-    if (this.state.playlistTracks.find( savedTrack => savedTrack.id === track.id)) {
-      this.setState({ playlistTracks: this.playlistTracks.push(track) });
+    if (!this.state.playlistTracks.find( savedTrack => savedTrack.id === track.id)) {
+      const newPlaylistTracks = this.state.playlistTracks;
+      newPlaylistTracks.push(track);
+      this.setState({ playlistTracks: newPlaylistTracks });
     }
+  }
+
+  removeTrack(track) {
+    const indexTrackRemove = this.state.playlistTracks.findIndex( savedTrack => savedTrack.id === track.id);
+    const newPlaylistTracks = this.state.playlistTracks;
+    newPlaylistTracks.splice(indexTrackRemove, 1);
+    this.setState({ playlistTracks: newPlaylistTracks });
+  }
+
+  updatePlaylistName(newName) {
+    this.setState({ playlistName: newName });
+  }
+
+  savePlaylist() {
+    this.state.trackURIs = this.state.playlistTracks.map(track => track.uri);
+  }
+
+  search(term) {
+    console.log(term);
   }
 
   render() {
@@ -36,8 +61,8 @@ class App extends React.Component {
         <div className="App">
         <SearchBar />
         <div className="App-playlist">
-          <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
-          <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
+          <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} onSearch={this.search} />
+          <Playlist playlistName={this.state.playlistName} onNameChange={this.updatePlaylistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} onSave={this.savePlaylist} />
         </div>
         </div>
       </div>
