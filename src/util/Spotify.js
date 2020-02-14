@@ -20,6 +20,10 @@ const Spotify = {
         } else {
             window.location = `${spotifyEndpoint}?client_id=${clientID}&response_type=token&redirect_uri=${redirectURI}&scope=playlist-modify-public`;
         }
+    },
+
+    search(term) {
+
     }
 }
 
